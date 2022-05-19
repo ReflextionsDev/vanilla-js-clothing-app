@@ -126,25 +126,22 @@ const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday
 const date = new Date()
 const day = weekday[date.getDay()]
 
-// === Logic ===
+dateElem.innerHTML = date.toDateString()
 
-// Get clothing type
-let clothingType = ""
-switch (day.toLowerCase()) {
-    case "sunday":
-        clothingType = "sport"
-        break;
-    case "saturday":
-        clothingType = "casual"
-        break;
-    default:
-        clothingType = "formal"
-        break;
+// === Functions ===
+
+// Logic
+function getClothingType() {
+    switch (day.toLowerCase()) {
+        case "sunday":
+            return "sport"
+        case "saturday":
+            return "casual"
+        default:
+            return "formal"
+    }
 }
 
-
-
-// Set up outfit
 function getOutfit(type) {
 
     let clothes = clothing.filter(obj => obj.dressCode === type)
@@ -159,12 +156,7 @@ function getOutfit(type) {
     }
 }
 
-
-
-// DOM Manipulation render
-dateElem.innerHTML = date.toDateString()
-
-
+// Render
 function displayOutfit(outfit) {
 
     let articles = Object.keys(outfit)
@@ -199,16 +191,11 @@ function createArticle(article) {
     clothesElem.appendChild(element)
 }
 
-
-// functionalize clothing type
-
-
-// 
+// Interactions
 newElem.addEventListener('click', (() => refreshOutfit()))
 
-
 function refreshOutfit() {
-    displayOutfit(getOutfit(clothingType))
+    displayOutfit(getOutfit(getClothingType()))
 }
 
 refreshOutfit()
