@@ -1,6 +1,4 @@
-// https://docs.google.com/document/d/1aElBq3kyN5jAMIUEemR-fZYAGnUKJ_kwsSbVeAxys6k/edit
-
-// description, type, dressCode, imageUrl
+// keys: description, type, dressCode, imageUrl
 const clothing = [
     {
         description: 'Michael Kors Blue Dress Shirt',
@@ -71,7 +69,7 @@ const clothing = [
     {
         description: 'Sperry Brown Shoes',
         type: "shoes",
-        dressCode: 'casual',
+        dressCode: 'formal',
         imageUrl: 'https://slimages.macysassets.com/is/image/MCY/products/6/optimized/21650286_fpx.tif?op_sharpen=1&wid=1230&hei=1500&fit=fit,1&$filterxlrg$&fmt=webp',
     },
     {
@@ -118,3 +116,99 @@ const clothing = [
     },
 ]
 
+// DOM Elements
+const dateElem = document.getElementById("date")
+const clothesElem = document.getElementById("clothes")
+const newElem = document.getElementById("new")
+
+// Date Vars
+const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const date = new Date()
+const day = weekday[date.getDay()]
+
+// === Logic ===
+
+// Get clothing type
+let clothingType = ""
+switch (day.toLowerCase()) {
+    case "sunday":
+        clothingType = "sport"
+        break;
+    case "saturday":
+        clothingType = "casual"
+        break;
+    default:
+        clothingType = "formal"
+        break;
+}
+
+
+
+// Set up outfit
+function getOutfit(type) {
+
+    let clothes = clothing.filter(obj => obj.dressCode === type)
+    let clothesTop = clothes.filter(obj => obj.type === "top")
+    let clothesBottom = clothes.filter(obj => obj.type === "bottom")
+    let clothesShoes = clothes.filter(obj => obj.type === "shoes")
+
+    return outfit = {
+        top: clothesTop[Math.floor(Math.random() * clothesTop.length)],
+        bottom: clothesBottom[Math.floor(Math.random() * clothesBottom.length)],
+        shoes: clothesShoes[Math.floor(Math.random() * clothesShoes.length)]
+    }
+}
+
+
+
+// DOM Manipulation render
+dateElem.innerHTML = date.toDateString()
+
+
+function displayOutfit(outfit) {
+
+    let articles = Object.keys(outfit)
+
+    removeArticles(articles)
+    articles.forEach(type => {
+        createArticle(outfit[type])
+    })
+}
+
+function removeArticles(articles) {
+    articles.forEach(id => {
+        let elem = document.getElementById(id)
+        if (elem) { elem.remove() }
+    })
+}
+
+function createArticle(article) {
+
+    const element = document.createElement("div")
+    const elemDesc = document.createElement("div")
+    const elemImg = document.createElement("img")
+
+    element.id = article.type
+    elemDesc.innerHTML = article.description
+    elemImg.src = article.imageUrl
+    elemImg.alt = article.description
+
+    element.appendChild(elemImg)
+    element.appendChild(elemDesc)
+
+    clothesElem.appendChild(element)
+}
+
+
+// functionalize clothing type
+
+
+// 
+newElem.addEventListener('click', (() => refreshOutfit()))
+
+
+function refreshOutfit() {
+    displayOutfit(getOutfit(clothingType))
+}
+
+refreshOutfit()
